@@ -9,5 +9,9 @@ Redmine::Plugin.register :redmine_issue_to_trello do
   version '0.0.1'
   url 'http://github.com/meinside/redmine_issue_to_trello'
   author_url 'http://meinside.pe.kr'
+
+  project_module :issue_tracking do
+    permission :push_issues_to_trello, { }
+  end
 end
 

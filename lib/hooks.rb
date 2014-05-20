@@ -16,6 +16,8 @@ module RedmineTrello
     def controller_issues_new_after_save(context = {})
       # read config
       config = TrelloHelper.config
+      return if !User.current.allowed_to?(:push_issues_to_trello, context[:issue].project)
+
       app_key = config["app_key"]
       user_token = config["user_token"]
       list_id = config["list_id"]
