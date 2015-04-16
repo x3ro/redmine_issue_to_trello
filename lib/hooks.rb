@@ -16,7 +16,13 @@ module RedmineTrello
     def controller_issues_new_after_save(context = {})
       # read config
       config = TrelloHelper.config
-      return if !User.current.allowed_to?(:push_issues_to_trello, context[:issue].project)
+
+      # Skip permission check is needed when the issue creation hook is invoked
+      # by the IMAP email receive handler, since it may create new users.
+      context[:no_permission_check] ||= false
+      if !context[:no_permission_check] && !User.current.allowed_to?(:push_issues_to_trello, context[:issue].project)
+        return false
+      end
 
       app_key = config["app_key"]
       user_token = config["user_token"]
